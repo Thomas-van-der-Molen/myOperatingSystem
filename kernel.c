@@ -30,6 +30,8 @@ enum vga_color {
 	VGA_COLOR_WHITE = 15,
 };
 
+void clear_terminal();
+
 static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg)
 {
 	return fg | bg << 4;
@@ -86,13 +88,21 @@ void terminal_putchar(char c)
 	if(c == '\n'){
 		terminal_column=0;
 		terminal_row++;
-		return;
 	}
-	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-	if(++terminal_column == VGA_WIDTH){
+	else{
+		terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+		terminal_column++;
+	}
+	if(terminal_column == VGA_WIDTH){
 		terminal_column = 0;
-		if(++terminal_row == VGA_HEIGHT)
-			terminal_row = 0;
+		terminal_row++;
+	}
+	if(terminal_row == VGA_HEIGHT){
+		//firstly, clear the terminal
+		clear_terminal();
+		//then, resume at the beginning
+		terminal_column = 0;
+		terminal_row = 0;
 	}
 }
 
@@ -108,12 +118,66 @@ void terminal_writestring(const char* data)
 	terminal_write(data, strlen(data));
 }
 
+void clear_terminal(){
+	for(size_t i=0; i<VGA_HEIGHT; i++){
+		terminal_row = i;
+		for(size_t j=0; j<VGA_WIDTH; j++){
+			terminal_column = j;
+			const size_t index = i*VGA_WIDTH+j;
+			terminal_buffer[index] = 0;
+		}
+	}
+}
+
 void kernel_main(void)
 {
 	terminal_initialize();
 	terminal_writestring("Hello, kernel world!\n");
 	terminal_writestring("Is this on a new line?\n");
 	terminal_writestring("It is!\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
+	terminal_writestring("What if there are too many lines?\n");
 } 
 
 
